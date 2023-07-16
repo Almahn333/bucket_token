@@ -46,7 +46,7 @@ def perform_action():
 
         # Return an error response with the remaining time
         logging.info('Rate limit exceeded')
-        return jsonify({'message': 'Rate limit exceeded', 'remaining_time': remaining_time}), 429
+        return jsonify({'message': 'Rate limit exceeded', 'Please wait for ': remaining_time, 'seconds'}), 429
 
 @app.route('/api/rate_limit_events', methods=['GET'])
 def get_rate_limit_events():
