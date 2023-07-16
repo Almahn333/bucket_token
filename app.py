@@ -3,12 +3,13 @@ from flask_cors import CORS
 import time
 import logging
 
-CORS(app)
-
 app = Flask(__name__)
 
 # Set up logging
 logging.basicConfig(filename='rate_limit.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
+# Enable CORS
+CORS(app)
 
 # Token bucket parameters
 capacity = 10  # Maximum number of tokens
@@ -46,7 +47,7 @@ def perform_action():
 
         # Return an error response with the remaining time
         logging.info('Rate limit exceeded')
-        return jsonify({'message': 'Rate limit exceeded', 'Please wait for ': remaining_time}), 429
+        return jsonify({'message': 'Rate limit exceeded', 'remaining_time': remaining_time}), 429
 
 @app.route('/api/rate_limit_events', methods=['GET'])
 def get_rate_limit_events():
