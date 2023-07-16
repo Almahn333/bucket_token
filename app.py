@@ -3,14 +3,15 @@ from flask_cors import CORS
 import time
 import logging
 
-app = Flask(__name__)
 CORS(app)
+
+app = Flask(__name__)
 
 # Set up logging
 logging.basicConfig(filename='rate_limit.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Token bucket parameters
-capacity = 5  # Maximum number of tokens
+capacity = 10  # Maximum number of tokens
 tokens = capacity  # Current number of tokens
 refill_rate = 1  # Tokens to be refilled per second
 last_refill_time = time.time()  # Time of the last token refill
@@ -38,11 +39,14 @@ def perform_action():
         # For example, you can increment a counter or print a message
         logging.info('Action performed successfully')
         tokens -= 1
-        return jsonify({'message': 'Action performed successfully'})
+        return jsonify({'message': 'Action performed successfully', 'remaining_time': 0})
     else:
-        # Return an error response if tokens are insufficient
+        # Calculate the remaining time until tokens recover
+        remaining_time = (1 - tokens) / refill_rate
+
+        # Return an error response with the remaining time
         logging.info('Rate limit exceeded')
-        return jsonify({'message': 'Rate limit exceeded'}), 429
+        return jsonify({'message': 'Rate limit exceeded', 'remaining_time': remaining_time}), 429
 
 @app.route('/api/rate_limit_events', methods=['GET'])
 def get_rate_limit_events():
