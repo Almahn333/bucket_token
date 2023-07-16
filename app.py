@@ -10,7 +10,7 @@ CORS(app)
 logging.basicConfig(filename='rate_limit.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Token bucket parameters
-capacity = 10  # Maximum number of tokens
+capacity = 5  # Maximum number of tokens
 tokens = capacity  # Current number of tokens
 refill_rate = 1  # Tokens to be refilled per second
 last_refill_time = time.time()  # Time of the last token refill
